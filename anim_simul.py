@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from scipy.stats import truncnorm
 import heapq
+import mpl_toolkits.axisartist as AA
 
 
 class Passenger:
@@ -261,19 +262,25 @@ class Simulation:
             elif isinstance(obj, Stats):
                 obj.measure(t, buses, self.stops, moved_passengers)
                 heapq.heappush(events, (t + self.stats_time, obj))
-                plt.figure()
+                fig = plt.figure()
+                ax = AA.Subplot(fig, 111)
+                fig.add_axes(ax)
+                ax.axis['right'].set_visible(False)
+                ax.axis['top'].set_visible(False)
                 plt.bar([stop.position for stop in self.stops],
                         [len(stop.passengers) for stop in self.stops],
-                        alpha=0.7, facecolor='r', edgecolor='w', width=1.5)
+                        width=1.5)
                 for bus in [bus for bus in buses if bus.active]:
-                    plt.plot(bus.position, 16 + bus.vjitter, 'b>',
+                    plt.plot(bus.position, 16 + bus.vjitter, '>',
+                             color='#A60628',
                              markersize=3 + len(bus.passengers)**(2.0/3.0))
-                plt.text(25, 18, '{:.2f} min'.format(t))
+                plt.text(26, 19, '{:.0f} min'.format(t))
                 plt.xlim(-0.5, 30)
                 plt.ylim(0, 20)
                 plt.xlabel('Position (km)')
                 plt.ylabel('Nombre de passagers')
                 plt.savefig('anim/fig{:05d}.png'.format(counter))
+                print 'anim/fig{:05d}.png'.format(counter)
                 counter += 1
 
 
@@ -289,5 +296,6 @@ if __name__ == '__main__':
     sim = Simulation(bus_stop_positions=stop_pos,
                      time_between_buses=lambda: 40,
                      nb_stops_to_dest=stops_to_dest,
-                     passenger_arrival_times=lambda : np.random.exponential(5.0))
+                     passenger_arrival_times=lambda : np.random.exponential(5.0),
+                     stats_time=2)
     sim.run()
