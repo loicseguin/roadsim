@@ -509,6 +509,11 @@ class Stats:
 
 
 class Event:
+    """The simulation works by processing events.  An event occurs at a
+    specific time ``e_time`` and involves a specific object ``e_obj``.
+    Comparing two events amounts to figuring out which event occurs first.
+
+    """
     def __init__(self, e_time, e_obj):
         self.e_time = e_time
         self.e_obj = e_obj
