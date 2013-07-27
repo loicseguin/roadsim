@@ -17,6 +17,10 @@ further using other tools.
 
 import heapq
 import matplotlib
+
+matplotlib.rcParams['xtick.direction'] = 'out'
+matplotlib.rcParams['ytick.direction'] = 'out'
+
 import matplotlib.pyplot as plt
 import numpy as np
 from scipy.stats import truncnorm
