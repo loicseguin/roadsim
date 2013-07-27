@@ -508,6 +508,15 @@ class Stats:
         fig.subplots_adjust(wspace=0.5, hspace=0.5)
 
 
+class Event:
+    def __init__(self, e_time, e_obj):
+        self.e_time = e_time
+        self.e_obj = e_obj
+
+    def __lt__(self, other):
+        return self.e_time < other.e_time
+
+
 class Simulation:
     """A simulation takes care of creating the buses, bus stops and passengers.
     It then execute a sequence of events until the last bus reaches the last
@@ -647,7 +656,7 @@ class Simulation:
 
         # Initialize events queue.
         for stop in self.stops:
-            heapq.heappush(events, (stop.next_arrival_time(), stop))
+            heapq.heappush(events, Event(stop.next_arrival_time(), stop))
 
         buses = []
         # first bus starts early to avoid over accumulation of passengers at
@@ -656,21 +665,22 @@ class Simulation:
         for i in range(self.nb_buses):
             bus = Bus()
             buses.append(bus)
-            heapq.heappush(events, (t, bus))
+            heapq.heappush(events, Event(t, bus))
             t += self.time_between_buses()
         buses[-1].last = True
 
         # Initialize statistics collection.
         self.stats = Stats()
-        heapq.heappush(events, (self.stats_time, self.stats))
+        heapq.heappush(events, Event(self.stats_time, self.stats))
 
         while events:
-            t, obj = heapq.heappop(events)
+            event = heapq.heappop(events)
+            t, obj = event.e_time, event.e_obj
             if isinstance(obj, BusStop):
                 # New arrival at a bus stop.
                 dest = obj.index + self.nb_stops_to_dest()
                 obj.passenger_arrival(t, dest=dest)
-                heapq.heappush(events, (t + obj.next_arrival_time(), obj))
+                heapq.heappush(events, Event(t + obj.next_arrival_time(), obj))
             elif isinstance(obj, Bus):
                 if not obj.active:
                     obj.active = True
@@ -691,15 +701,16 @@ class Simulation:
                     # Passengers hop in.
                     wait_in = bus_stop.hop_in_bus(t, self.hop_in_time, obj)
                     obj.next_stop += 1
-                    heapq.heappush(events, (t + wait_out + wait_in, obj))
+                    heapq.heappush(events, Event(t + wait_out + wait_in, obj))
                 else:
                     # Bus finished loading passengers, move to next stop.
                     dist = self.stops[obj.next_stop].position - obj.position
-                    heapq.heappush(events, (t + self.bus_speed() * dist, obj))
+                    heapq.heappush(events,
+                                   Event(t + self.bus_speed() * dist, obj))
                     obj.position += dist
             elif isinstance(obj, Stats):
                 obj.measure(t, buses, self.stops, moved_passengers)
-                heapq.heappush(events, (t + self.stats_time, obj))
+                heapq.heappush(events, Event(t + self.stats_time, obj))
 
 
 if __name__ == '__main__':
