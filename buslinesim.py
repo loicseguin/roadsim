@@ -25,7 +25,7 @@ from scipy.stats import truncnorm
 class PrettyFig(matplotlib.figure.Figure):
     """Produce subplots similar to R's default plots.  This class only
     redefines ``matplotlib.figure.Figure``'s ``add_subplot`` method.  Only the
-    left and bottom spined are shown, and they are positioned 8 pixels away
+    left and bottom spines are shown, and they are positioned 8 pixels away
     from the plot region.  Moreover, the y-grid is turned on.
 
     Example
@@ -35,7 +35,7 @@ class PrettyFig(matplotlib.figure.Figure):
 
         >>> x = np.linspace(0, 60, 500)
         >>> y = 0.5 * (1 - np.tanh(0.1*(x - 30)))
-        >>> fig = figure(FigureClass=PrettyFig)
+        >>> fig = plt.figure(FigureClass=PrettyFig)
         >>> plt.plot(x, y, linewidth=2)
         >>> plt.xlabel("Temps d'attente (min)")
         >>> plt.ylabel("Satisfaction")
@@ -523,7 +523,7 @@ class Simulation:
     The default values for the simulation are defined to give something
     reasonable, but they should be tuned based on available data.  By default,
     a simulation assumes time is measured in minutes, distance in kilometers
-    and speed in kilometers per minutes.  The full list of initialization
+    and speed in kilometers per minute.  The full list of initialization
     options follows.
 
     bus_stop_positions: list or array
