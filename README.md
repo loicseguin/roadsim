@@ -10,6 +10,15 @@ Roadsim is simple, but it can be used as a starting point to handle more
 complicated scenarios.
 
 
+## Dependencies
+
+To run the simulation, the following packages are required:
+
+  - scipy
+  - numpy
+  - matplotlib
+
+
 ## Example
 
 Start by determining the number of bus stops and their positions.
@@ -128,3 +137,12 @@ stats_time: float
 Once the simulation has finished running, the statistics are available in
 the ``Stats`` object ``sim.stats``.
 
+## Animation
+
+The `anim_simul.py` script will produce a mp4 movie showing the length of
+queues, the positions of the buses and the number of passengers in each bus.
+To use the script, create a directory named `anim` and execute the script with
+
+    python anim_simul.py
+
+The animation is saved to a file named `movie.mp4` in the current directory.
