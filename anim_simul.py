@@ -34,6 +34,7 @@ class AnimStats(Stats):
         plt.savefig('anim/fig{:05d}.png'.format(counter))
         print('anim/fig{:05d}.png'.format(counter))
         counter += 1
+        plt.close(fig)
 
 class AnimSimulation(Simulation):
     def run(self):

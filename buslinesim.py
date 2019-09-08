@@ -407,7 +407,7 @@ class Stats:
     def _nb_bins(self, x):
         """Use Rice rule for number of bins in histograms."""
         x = np.array(x)
-        return np.ceil(2 * x ** (1.0/3.0))
+        return int(np.ceil(2 * x ** (1.0/3.0)))
 
     def plot_travel_times(self, **kwargs):
         """Plot a histogram of travel times."""
